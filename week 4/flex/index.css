@@ -1,0 +1,38 @@
+.container {
+    background-color: red;
+    display: flex;
+    height: 400px;
+    width:100%;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    border: 1px solid black;
+    flex-wrap: wrap;
+}
+
+
+
+.child {
+    min-width: 200px;
+    height: 50%;
+    background-color: blue;
+
+    border: 1px solid black;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.child-child {
+    background-color: green;
+    height: 50px;
+    width: 60px;
+
+    border: 1px solid black;
+}
+
+.child:nth-child(even){
+    background-color: pink;
+}

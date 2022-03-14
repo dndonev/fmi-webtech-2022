@@ -1,0 +1,26 @@
+.container {
+    background-color: red;
+    /* display: flex; */
+    display: grid;
+    
+    height: 400px;
+    grid-template-columns: 1fr 2fr 1fr 2fr;
+    grid-template-rows: 1fr 2fr;
+    /* gap: 10px; */
+
+    border: 1px solid black;
+    /* flex-wrap: wrap; */
+}
+
+
+
+.child {
+    background-color: blue;
+    height: 50px;
+    border: 1px solid black;
+
+}
+/* 
+.child:nth-child(even){
+    background-color: pink;
+} */
