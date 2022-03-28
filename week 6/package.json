@@ -1,0 +1,14 @@
+{
+  "name": "week-6",
+  "version": "1.0.0",
+  "description": "asdfasdfasdfasdfasdfasfsadfasdfasdf",
+  "main": "index.js",
+  "scripts": {
+    "nashiqt-script": "node ./index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
