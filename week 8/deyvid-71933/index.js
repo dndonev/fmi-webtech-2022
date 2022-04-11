@@ -5,7 +5,7 @@ const app = express()
 const port = 3000;
 app.use(express.json());
 
-let users = []
+let users = [{id:'71933', name:'Deyvid'}]
 
 app.get('/api/users', (req, res) => {
     res.json(users)
@@ -44,6 +44,52 @@ app.post('/api/users/create', (req, res) => {
 
     return res
         .json(newUser);
+})
+
+app.delete('/api/users/:id', (req, res) => {
+    let id = req.params.id
+    
+    if(!id){
+        return res
+        .status(400)
+        .json({error: "Invalid parameter"});
+    }
+
+    users = users.filter(user => user.id !== id)
+
+    return res
+        .status(204).send()
+})
+
+
+app.patch('/api/users/:id', (req, res) => {
+    let id = req.params.id
+    console.log(id)
+
+    if(!id){
+        return res
+        .status(400)
+        .json({error: "Invalid parameter"});
+    }
+
+    const user = users.find(user => user.id === id)
+    if(!user){
+        return res
+        .status(404)
+        .json({error: "User not found!"});
+    }
+
+    let name = req.body.name
+    if(!name){
+        return res
+        .status(400)
+        .json({error: "Invalid Parameter"});
+    }
+
+    user.name = name
+
+    return res
+        .status(202).send()
 })
 
 app.listen(3000);
