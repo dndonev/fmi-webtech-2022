@@ -1,5 +1,5 @@
 const express = require('express') 
-const uuid = require('uuid')
+const { v4: uuidv4 } = require('uuid');
 
 const app = express()
 const port = 3000;
@@ -36,9 +36,9 @@ app.post('/api/users/create', (req, res) => {
         .json({error: "Invalid parameter"});
     }
 
-    let newId = uuid.v5()
-
+    let newId = uuidv4();
     const newUser = {name: userName, id: newId};
+
     users.push(newUser);
 
 
