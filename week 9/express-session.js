@@ -12,21 +12,26 @@ app.use(session({
 	secret: 'my-secret'
 }));
 
-const users = [];
+app.post('/register', (req, res) => {
+	const { user } = req.body;
+	if (!user) {
+		return res.sendStatus(400);
+	}
+	req.session.user = user;
+	res.status(200).send()
+})
 
-app.post('/login', (req, res) => {
-    if (isValidUser) { // 
-        req.session.isAuthenticated = true;
-        res.send();
-    }
-});
+app.get('/private', (req, res) => {
 
-app.post('/private', (req, res) => {
-    const { isAuthenticated } =  req.session;
+	if (!req.session.user.username === 'dobrin123' && !req.session.user.password === 'not123') {
+		return res.sendStatus(401);
+	}
+	res.send('private')
+})
 
-    if (isAuthenticated) {
-        return res.status(401).send();
-    }
+app.get('/logout', (req, res) => {
+	req.session.destroy();
+	res.send('logged out')
 });
 
 app.listen(3000);
