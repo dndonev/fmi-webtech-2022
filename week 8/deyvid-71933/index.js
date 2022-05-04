@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 const app = express();
 app.use(express.json());
 
-let users = [{id:'71933', name:'Deyvid'}]
+let users = [{id:'71933', name:'Deyvid'}] // DB with users. WoW!
 
 app.get('/api/users', (req, res) => {
     res.json(users)
