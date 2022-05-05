@@ -4,9 +4,7 @@ const bcrypt = require('bcrypt');
 const app = express(); // create application from express
 app.use(express.json()); // middleware to parse json request body (req.body !== undefined)
 
-
 const users = [];
-
 
 app.post('/user', (req, res) => {
     const { username, password } = req.body;
