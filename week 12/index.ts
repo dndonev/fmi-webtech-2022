@@ -13,5 +13,8 @@ app.use(express.json());
 connectAPI(app, '/api');
 
 app.listen(
-    process.env.PORT || 3001, async () => await connect(process.env.DB_CONNECTION_STRING as string)
+    process.env.PORT, async () => {
+        await connect(process.env.DB_CONNECTION_STRING as string);
+        console.log('Your server and DB are ready!')
+    }
 );

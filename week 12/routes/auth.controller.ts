@@ -1,16 +1,44 @@
 import { Router } from 'express';
 import mongoose from 'mongoose';
 import { compareSync, hash } from 'bcrypt';
+import { sign, verify } from 'jsonwebtoken';
 
 import { UserModel } from '../models/user.model';
+import { RefreshTokenModel } from '../models/token.model';
+
 import { verifyToken } from '../middlewares/verify-token';
 
 import { saveRefreshToken, signToken } from '../utils/token.utils';
 
 import { IAuthenticatedUserRequest, IUser } from '../interfaces/user.interface';
-import { ITokens } from '../interfaces/tokens.interface';
+import { IRefreshToken, ITokens } from '../interfaces/tokens.interface';
 
 const authController = Router();
+
+authController.post('/token', async (req, res) => {
+	const token: string = req.body.token;
+
+	if (!token || token === '') {
+		return res.status(400).json({ error: 'Invalid parameter - token' })
+	}
+
+	const tokenDocument = await RefreshTokenModel.findOne({ token: token });
+	if (!tokenDocument) {
+		return res.sendStatus(403);
+	}
+
+	const refreshToken: string = (tokenDocument.toJSON() as IRefreshToken).refreshToken;
+
+	let user: IUser;
+	try {
+		user = verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string) as IUser;
+
+		const accessToken: string = sign(user, process.env.ACCESS_TOKEN_SECRET as string);
+		res.status(200).json({ accessToken });
+	} catch (err) {
+		res.status(400).json(err);
+	}
+});
 
 authController.post('/login', async (req, res) => {
 	const email: string = req.body.email;
@@ -55,11 +83,11 @@ authController.post('/register', async (req, res) => {
 			id: new mongoose.Types.ObjectId(),
 			email: newUser.email,
 			password: hashed,
-			createDate: today,
 			firstName: newUser.firstName,
 			lastName: newUser.lastName,
 			username: newUser.username
 		});
+
 		const validation: NativeError = user.validateSync();
 		if (validation) {
 			return res.status(400).json(validation);
@@ -78,6 +106,21 @@ authController.post('/register', async (req, res) => {
 	}
 
 	return res.json({ error: 'User already exists' });
+});
+
+authController.post('/logout', async (req, res) => {
+	const refreshToken: string = req.body.token;
+
+	if (!refreshToken || refreshToken === '') {
+		return res.status(400).json({ error: 'Invalid parameter - token' })
+	}
+
+	const tokenDocument = await RefreshTokenModel.findOneAndRemove({ refreshToken })
+	if (!tokenDocument) {
+		return res.status(403);
+	}
+
+	return res.status(204).send('You have been logged out');
 });
 
 authController.get('/user-info', verifyToken, async (req, res)=> {
